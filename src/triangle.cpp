@@ -14,6 +14,11 @@ Point3D Point3D::operator-(const Point3D& other) const
     return Point3D(x - other.x, y - other.y, z - other.z);
 }
 
+Point3D Point3D::operator*(double scalar) const
+{
+    return Point3D(x * scalar, y * scalar, z * scalar);
+}
+
 bool Point3D::operator==(const Point3D& other) const
 {
     return std::fabs(x - other.x) < EPS && 
