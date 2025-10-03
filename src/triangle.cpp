@@ -120,4 +120,63 @@ bool pointInsideTriangle(const Point3D& p, const Triangle& tri)
     return (u >= -EPS) && (v >= -EPS) && (w >= -EPS);
 }
 
-//TODO - checkIntersects() function
+bool segmentsIntersect(const Point3D& a, const Point3D& b, const Point3D& c, const Point3D& d)
+{
+    Point3D ab = b - a;
+    Point3D cd = d - c;
+    Point3D ac = c - a;
+    
+    Point3D ab_cd = cross(ab, cd);
+    double denom = dot(ab_cd, ab_cd);
+    
+    if (equals(denom, 0))
+    {
+        if (pointOnSegment(a, c, d) || pointOnSegment(b, c, d) || 
+            pointOnSegment(c, a, b) || pointOnSegment(d, a, b))
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    double t = dot(cross(ac, cd), ab_cd) / denom;
+    double u = dot(cross(ac, ab), ab_cd) / denom;
+    
+    if (t >= -EPS && t <= 1.0 + EPS && u >= -EPS && u <= 1.0 + EPS)
+    {
+        return true;
+    }
+    
+    return false;
+}
+
+bool trianglesIntersect(const Triangle& t1, const Triangle& t2)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        int j = (i + 1) % 3;
+        for (int k = 0; k < 3; k++)
+        {
+            int l = (k + 1) % 3;
+            if (segmentsIntersect(t1.vertices[i], t1.vertices[j], 
+                                 t2.vertices[k], t2.vertices[l]))
+            {
+                return true;
+            }
+        }
+    }
+    
+    for (int i = 0; i < 3; i++)
+    {
+        if (pointOnTriangle(t1.vertices[i], t2) || pointInsideTriangle(t1.vertices[i], t2))
+        {
+            return true;
+        }
+        if (pointOnTriangle(t2.vertices[i], t1) || pointInsideTriangle(t2.vertices[i], t1))
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}

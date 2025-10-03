@@ -36,5 +36,8 @@ bool pointOnSegment(const Point3D& p, const Point3D& a, const Point3D& b);
 bool pointOnTriangle(const Point3D& p, const Triangle& tri);
 bool pointInsideTriangle(const Point3D& p, const Triangle& tri);
 
+bool segmentsIntersect(const Point3D& a, const Point3D& b, const Point3D& c, const Point3D& d);
+bool trianglesIntersect(const Triangle& t1, const Triangle& t2);
+
 
 #endif

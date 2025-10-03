@@ -24,7 +24,22 @@ int main()
     
     std::set<int> intersectingTriangles;
     
-    // TODO - check for intersections
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = i + 1; j < N; j++)
+        {
+            if (trianglesIntersect(triangles[i], triangles[j]))
+            {
+                intersectingTriangles.insert(i);
+                intersectingTriangles.insert(j);
+            }
+        }
+    }
+    
+    for (int id : intersectingTriangles)
+    {
+        std::cout << id << "\n";
+    }
     
     return 0;
 }
