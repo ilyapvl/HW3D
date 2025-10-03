@@ -23,7 +23,6 @@ int main()
     {
         std::cout << id << "\n";
     }
-    std::cout << std::endl;
     
     return 0;
 }
