@@ -1,7 +1,6 @@
+#include "triangle.h"
 #include <iostream>
 #include <vector>
-#include <set>
-#include "triangle.h"
 
 int main()
 {
@@ -12,34 +11,19 @@ int main()
     
     for (int i = 0; i < N; i++)
     {
-        triangles[i].id = i;
-        std::cin >> triangles[i].vertices[0].x >> triangles[i].vertices[0].y >> triangles[i].vertices[0].z;
-        std::cin >> triangles[i].vertices[1].x >> triangles[i].vertices[1].y >> triangles[i].vertices[1].z;
-        std::cin >> triangles[i].vertices[2].x >> triangles[i].vertices[2].y >> triangles[i].vertices[2].z;
+        double x1, y1, z1, x2, y2, z2, x3, y3, z3;
+        std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
         
-        Point3D v1 = triangles[i].vertices[1] - triangles[i].vertices[0];
-        Point3D v2 = triangles[i].vertices[2] - triangles[i].vertices[0];
-        triangles[i].normal = normalize(cross(v1, v2));
+        triangles.emplace_back(i, Point3D(x1, y1, z1), Point3D(x2, y2, z2), Point3D(x3, y3, z3));
     }
     
-    std::set<int> intersectingTriangles;
+    std::vector<int> intersecting = findIntersectingTriangles(triangles);
     
-    for (int i = 0; i < N; i++)
-    {
-        for (int j = i + 1; j < N; j++)
-        {
-            if (trianglesIntersect(triangles[i], triangles[j]))
-            {
-                intersectingTriangles.insert(i);
-                intersectingTriangles.insert(j);
-            }
-        }
-    }
-    
-    for (int id : intersectingTriangles)
+    for (int id : intersecting)
     {
         std::cout << id << "\n";
     }
+    std::cout << std::endl;
     
     return 0;
 }
