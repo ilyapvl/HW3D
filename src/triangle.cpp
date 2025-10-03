@@ -160,8 +160,6 @@ bool trianglesIntersect(const Triangle& t1, const Triangle& t2)
         return coplanarTrianglesIntersect(t1, t2);
     }
     
-    Point3D D = cross(normal1, normal2);
-    
     std::vector<Point3D> axes;
     axes.push_back(normal1);
     axes.push_back(normal2);
