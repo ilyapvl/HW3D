@@ -7,7 +7,7 @@ int main()
     int N = 0;
     std::cin >> N;
     
-    std::vector<Triangle> triangles(N);
+    std::vector<Triangle> triangles;
     
     for (int i = 0; i < N; i++)
     {
