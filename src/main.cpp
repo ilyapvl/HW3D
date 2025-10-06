@@ -1,9 +1,21 @@
 #include "triangle.h"
 #include <iostream>
 #include <vector>
+#include <string>
+#include "triangle_test.h"
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc > 1)
+    {
+        if (std::strcmp(argv[1], "--t") == 0)
+        {
+            runAllTests();
+
+            return 0;
+        }
+    }
+
     int N = 0;
     std::cin >> N;
     
