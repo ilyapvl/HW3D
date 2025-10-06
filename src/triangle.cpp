@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <set>
+#include <iostream>
 
 
 
@@ -95,6 +96,47 @@ bool pointInTriangle(const Point3D& p, const Point3D& t0, const Point3D& t1, con
     return (u >= -EPS) && (v >= -EPS) && (w >= -EPS);
 }
 
+bool areCoplanar(const Triangle& t1, const Triangle& t2)
+{
+    Point3D v1 = t1.vertices[1] - t1.vertices[0];
+    Point3D v2 = t1.vertices[2] - t1.vertices[0];
+    Point3D normal1 = cross(v1, v2);
+    
+    double normal1_len = dot(normal1, normal1);
+    if (normal1_len < EPS)
+    {
+        Point3D u1 = t2.vertices[1] - t2.vertices[0];
+        Point3D u2 = t2.vertices[2] - t2.vertices[0];
+        Point3D normal2 = cross(u1, u2);
+        double normal2_len = dot(normal2, normal2);
+        
+        if (normal2_len < EPS)
+        {
+            return true;
+        }
+        
+        Point3D plane_vec = t1.vertices[0] - t2.vertices[0];
+        double dist1 = std::abs(dot(plane_vec, normal2));
+        return dist1 < EPS;
+    }
+    
+    normal1 = normal1 * (1.0 / std::sqrt(normal1_len));
+    
+    Point3D plane_point = t1.vertices[0];
+    
+    for (int i = 0; i < 3; i++)
+    {
+        Point3D vec = t2.vertices[i] - plane_point;
+        double distance = std::abs(dot(vec, normal1));
+        if (distance > EPS)
+        {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
 bool coplanarTrianglesIntersect(const Triangle& t1, const Triangle& t2)
 {
     for (int i = 0; i < 3; i++)
@@ -104,7 +146,7 @@ bool coplanarTrianglesIntersect(const Triangle& t1, const Triangle& t2)
             return true;
         }
     }
-    
+
     for (int i = 0; i < 3; i++)
     {
         if (pointInTriangle(t2.vertices[i], t1.vertices[0], t1.vertices[1], t1.vertices[2]))
@@ -151,14 +193,13 @@ bool coplanarTrianglesIntersect(const Triangle& t1, const Triangle& t2)
 
 bool trianglesIntersect(const Triangle& t1, const Triangle& t2)
 {
-    Point3D normal1 = cross(t1.vertices[1] - t1.vertices[0], t1.vertices[2] - t1.vertices[0]);
-    Point3D normal2 = cross(t2.vertices[1] - t2.vertices[0], t2.vertices[2] - t2.vertices[0]);
-    
-    double vol1 = tripleProduct(normal1, t2.vertices[0] - t1.vertices[0], normal2);
-    if (std::abs(vol1) < EPS)
+    if (areCoplanar(t1, t2))
     {
         return coplanarTrianglesIntersect(t1, t2);
     }
+    
+    Point3D normal1 = cross(t1.vertices[1] - t1.vertices[0], t1.vertices[2] - t1.vertices[0]);
+    Point3D normal2 = cross(t2.vertices[1] - t2.vertices[0], t2.vertices[2] - t2.vertices[0]);
     
     std::vector<Point3D> axes;
     axes.push_back(normal1);
