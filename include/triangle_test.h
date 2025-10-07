@@ -9,8 +9,9 @@ void testProjectTriangle();
 void testCoplanarity();
 void testCoplanarIntersection();
 void testNonCoplanarIntersection();
-void testEdgeCaseIntersections();
-void testFindIntersectingTriangles();
 bool equal(double a, double b);
 
+void endToEndTest();
+
 #endif
+

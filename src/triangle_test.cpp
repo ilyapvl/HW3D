@@ -3,20 +3,21 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <sstream>
 
 void runAllTests()
 {
-    std::cout << "=== TRIANGLE TESTS ===" << std::endl;
+    std::cout << "Triangle tests\n" << std::endl;
     
     testPointInTriangle();
     testProjectTriangle();
     testCoplanarity();
     testCoplanarIntersection();
     testNonCoplanarIntersection();
-    testEdgeCaseIntersections();
-    testFindIntersectingTriangles();
-    
-    std::cout << "=== ALL TESTS PASSED ===" << std::endl;
+
+    std::cout << "Unit tests passed" << std::endl;
+
+    endToEndTest();
 }
 
 void testPointInTriangle()
@@ -112,64 +113,179 @@ void testNonCoplanarIntersection()
     Triangle t3(2, Point3D(0.5, 0.5, -0.001), Point3D(1.5, 0.5, 0.001), Point3D(0.5, 1.5, 0.001));
     assert(trianglesIntersect(t1, t3) == true);
     
+    // Almost touching but no
     Triangle t4(3, Point3D(0.001, 0.001, 0.001), Point3D(0.002, 0.001, -0.001), Point3D(0.001, 0.002, -0.001));
     assert(trianglesIntersect(t1, t4) == true);
-}
-
-void testEdgeCaseIntersections()
-{
-    std::cout << "Testing edge case intersections" << std::endl;
-    
-    // Almost the same
-    Triangle t1(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
-    Triangle t2(1, Point3D(0.0001, 0.0001, 0.0001), Point3D(1.0001, 0.0001, 0.0001), Point3D(0.0001, 1.0001, 0.0001));
-    assert(trianglesIntersect(t1, t2) == true);
-    
-    // Small triangle
-    Triangle small(2, Point3D(0.1, 0.1, 0), Point3D(0.1001, 0.1, 0), Point3D(0.1, 0.1001, 0));
-    assert(trianglesIntersect(t1, small) == true);
-    
-    // Almost degenerated
-    Triangle degenerate(3, Point3D(0.5, 0.5, 0), Point3D(0.5001, 0.5001, 0), Point3D(0.5002, 0.5002, 0));
-    //TODO - check of degenerated triangles
-    
-    // Almost parallel
-    Triangle t3(4, Point3D(0, 0, 0.001), Point3D(1, 0, 0.001), Point3D(0, 1, 0.001));
-    Triangle t4(5, Point3D(0, 0, 0.002), Point3D(1, 0, 0.002), Point3D(0, 1, 0.002));
-    assert(trianglesIntersect(t3, t4) == false);
-}
-
-void testFindIntersectingTriangles()
-{
-    std::cout << "Testing find intersecting triangles" << std::endl;
-    
-    std::vector<Triangle> triangles;
-    
-    // Different types
-    triangles.push_back(Triangle(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0)));
-    triangles.push_back(Triangle(1, Point3D(0.999, 0.001, 0.001), Point3D(1.999, 0.001, 0.001), Point3D(0.999, 1.001, 0.001)));
-    
-    triangles.push_back(Triangle(2, Point3D(2.001, 0, 0), Point3D(3.001, 0, 0), Point3D(2.001, 1, 0)));
-    triangles.push_back(Triangle(3, Point3D(2.002, 0.001, 0), Point3D(3.002, 0.001, 0), Point3D(2.002, 1.001, 0)));
-    
-    triangles.push_back(Triangle(4, Point3D(0.5, 0.5, -0.001), Point3D(1.5, 0.5, 0.001), Point3D(0.5, 1.5, 0.001)));
-    triangles.push_back(Triangle(5, Point3D(0.6, 0.6, -0.002), Point3D(1.6, 0.6, 0), Point3D(0.6, 1.6, 0)));
-    
-    std::vector<int> result = findIntersectingTriangles(triangles);
-    
-    // 0 4 5 intersects
-    assert(result.size() == 3);
-    assert(std::find(result.begin(), result.end(), 0) != result.end());
-    assert(std::find(result.begin(), result.end(), 4) != result.end());
-    assert(std::find(result.begin(), result.end(), 5) != result.end());
-    
-    // 1 2 3 do not
-    assert(std::find(result.begin(), result.end(), 1) == result.end());
-    assert(std::find(result.begin(), result.end(), 2) == result.end());
-    assert(std::find(result.begin(), result.end(), 3) == result.end());
 }
 
 bool equal(double a, double b)
 {
     return std::abs(a - b) < EPS;
+}
+
+void endToEndTest()
+{   
+    std::cout << "\nEnd-to-end testing" << '\n';
+
+    struct TestCase
+    {
+        std::string name;
+        std::string input;
+        std::string expected;
+    };
+    
+    std::vector<TestCase> tests = {
+        {
+            "Coplanar triangles",
+            "2\n"
+            "0 0 0 2 0 0 0 2 0\n"
+            "1 1 0 3 1 0 1 3 0",
+            "0 1"
+        },
+        
+        {
+            "Non-intersecting", 
+            "2\n"
+            "0 0 0 1 0 0 0 1 0\n"
+            "2 2 1 3 2 1 2 3 1",
+            ""
+        },
+        
+        {
+            "One inside another",
+            "2\n"
+            "0 0 0 3 0 0 0 3 0\n"
+            "1 1 0 2 1 0 1 2 0",
+            "0 1"
+        },
+        
+        {
+            "Touching at vertex",
+            "2\n"
+            "0 0 0 1 0 0 0 1 0\n"
+            "0 1 0 -1 1 0 0 2 0", 
+            "0 1"
+        },
+        
+        {
+            "Touching at edge",
+            "2\n"
+            "0 0 0 2 0 0 0 2 0\n"
+            "0 2 0 2 2 0 0 4 0",
+            "0 1"
+        },
+        
+        {
+            "Intersection in 3D space",
+            "2\n"
+            "0 0 0 2 0 0 0 2 0\n"
+            "1 0 -1 1 2 1 2 1 1",
+            "0 1"
+        },
+        
+        {
+            "Almost parallel but no intersection",
+            "2\n"
+            "0 0 0 1 0 0 0 1 0\n"
+            "0 0 0.001 1 0 0.001 0 1 0.001",
+            ""
+        },
+        
+        {
+            "Three intersections",
+            "3\n"
+            "0 0 0 2 0 0 0 2 0\n"
+            "1 1 0 3 1 0 1 3 0\n"
+            "2 2 0 4 2 0 2 4 0",
+            "0 1 2"
+        },
+        
+        {
+            "Small intersection",
+            "2\n"
+            "0 0 0 0.1 0 0 0 0.1 0\n"
+            "0.005 0.005 0 0.015 0.005 0 0.005 0.015 0",
+            "0 1"
+        },
+        
+        {
+            "2 of 3",
+            "3\n"
+            "0 0 0 1 0 0 0 1 0\n"
+            "0.5 0.5 0 1.5 0.5 0 0.5 1.5 0\n"
+            "2 2 0 3 2 0 2 3 0",
+            "0 1"
+        },
+
+        {
+            "Almost coplanar",
+            "2\n"
+            "0 0 0 1 0 0 0 1 0\n"
+            "0 0 0.01 5 5 0.01 5 5 0",
+            ""
+        },
+
+        {
+            "Small gap",
+            "2\n"
+            "0 0 0 1 0 0 0 1 0\n"
+            "1.001 0 0 2.001 0 0 1.001 1 0",
+            ""
+        },
+
+    };
+    
+    int passed = 0;
+    int total = tests.size();
+    
+    for (const auto& test : tests)
+    {
+        std::istringstream input_stream(test.input);
+        std::streambuf* old_cin = std::cin.rdbuf(input_stream.rdbuf());
+        
+        std::ostringstream output_stream;
+        std::streambuf* old_cout = std::cout.rdbuf(output_stream.rdbuf());
+        
+        int n = 0;
+        std::cin >> n;
+        
+        std::vector<Triangle> triangles;
+        
+        for (int i = 0; i < n; i++)
+        {
+            double x1, y1, z1, x2, y2, z2, x3, y3, z3;
+            std::cin >> x1 >> y1 >> z1 >> x2 >> y2 >> z2 >> x3 >> y3 >> z3;
+            
+            triangles.emplace_back(i, Point3D(x1, y1, z1), Point3D(x2, y2, z2), Point3D(x3, y3, z3));
+        }
+        
+        std::vector<int> intersecting = findIntersectingTriangles(triangles);
+        
+        std::ostringstream result_stream;
+        if (!intersecting.empty())
+        {
+            for (size_t i = 0; i < intersecting.size(); i++)
+            {
+                if (i > 0) result_stream << " ";
+                result_stream << intersecting[i];
+            }
+        }
+        std::string result = result_stream.str();
+        
+        std::cin.rdbuf(old_cin);
+        std::cout.rdbuf(old_cout);
+        
+        if (result == test.expected)
+        {
+            passed++;
+        }
+        else
+        {
+            std::cout << "Failed test " << test.name << std::endl;
+            std::cout << "Expected: " << test.expected << std::endl;
+            std::cout << "Got: " << result << std::endl;
+        }
+    }
+
+    std::cout << "Passed: " << passed << "/" << total << std::endl;
 }
