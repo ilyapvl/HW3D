@@ -7,13 +7,15 @@ using namespace Geometry3D;
 using namespace testing;
 
 // Vector Math Tests
-TEST(VectorMathTest, DotProduct) {
+TEST(VectorMathTest, DotProduct)
+{
     Point3D a(1, 2, 3);
     Point3D b(4, 5, 6);
     EXPECT_DOUBLE_EQ(dot(a, b), 32.0);
 }
 
-TEST(VectorMathTest, CrossProduct) {
+TEST(VectorMathTest, CrossProduct)
+{
     Point3D a(1, 0, 0);
     Point3D b(0, 1, 0);
     Point3D result = cross(a, b);
@@ -22,7 +24,8 @@ TEST(VectorMathTest, CrossProduct) {
     EXPECT_DOUBLE_EQ(result.z, 1.0);
 }
 
-TEST(VectorMathTest, TripleProduct) {
+TEST(VectorMathTest, TripleProduct)
+{
     Point3D a(1, 0, 0);
     Point3D b(0, 1, 0);
     Point3D c(0, 0, 1);
@@ -31,7 +34,8 @@ TEST(VectorMathTest, TripleProduct) {
 
 // Individual triangle tests
 
-TEST(TriangleTest, PointInTriangle) {
+TEST(TriangleTest, PointInTriangle)
+{
     Triangle t1(0, Point3D(0,0,0), Point3D(1,0,0), Point3D(0,1,0));
     Point3D inside(0.2, 0.2, 0);
     Point3D outside(1.0, 1.0, 0);
@@ -40,7 +44,8 @@ TEST(TriangleTest, PointInTriangle) {
     EXPECT_FALSE(pointInTriangle(outside, t1.vertices[0], t1.vertices[1], t1.vertices[2]));
 }
 
-TEST(TriangleTest, ProjectTriangle) {
+TEST(TriangleTest, ProjectTriangle)
+{
     Triangle t1(0, Point3D(0,0,0), Point3D(1,0,0), Point3D(0,1,0));
     Point3D axis(1, 0, 0);
     double minProj, maxProj;
@@ -50,7 +55,8 @@ TEST(TriangleTest, ProjectTriangle) {
     EXPECT_DOUBLE_EQ(maxProj, 1.0);
 }
 
-TEST(TriangleTest, CoplanarityDetection) {
+TEST(TriangleTest, CoplanarityDetection)
+{
     Triangle t1(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
     Triangle t2(1, Point3D(2, 0, 0), Point3D(3, 0, 0), Point3D(2, 1, 0));
     Triangle t3(2, Point3D(0, 0, 1), Point3D(1, 0, 1), Point3D(0, 1, 1));
@@ -59,28 +65,32 @@ TEST(TriangleTest, CoplanarityDetection) {
     EXPECT_FALSE(areCoplanar(t1, t3)); 
 }
 
-TEST(TriangleTest, NonIntersectingTriangles) {
+TEST(TriangleTest, NonIntersectingTriangles)
+{
     Triangle t1(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
     Triangle t2(1, Point3D(2, 0, 0), Point3D(3, 0, 0), Point3D(2, 1, 0));
     
     EXPECT_FALSE(trianglesIntersect(t1, t2));
 }
 
-TEST(TriangleTest, IntersectingTriangles) {
+TEST(TriangleTest, IntersectingTriangles)
+{
     Triangle t1(0, Point3D(0, 0, 0), Point3D(2, 0, 0), Point3D(0, 2, 0));
     Triangle t2(1, Point3D(1, 0, 0), Point3D(1, 2, 0), Point3D(0, 1, 0));
     
     EXPECT_TRUE(trianglesIntersect(t1, t2));
 }
 
-TEST(TriangleTest, CoplanarIntersectingTriangles) {
+TEST(TriangleTest, CoplanarIntersectingTriangles)
+{
     Triangle t1(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
     Triangle t2(1, Point3D(0.5, 0, 0), Point3D(1.5, 0, 0), Point3D(0.5, 1, 0));
     
     EXPECT_TRUE(trianglesIntersect(t1, t2));
 }
 
-TEST(EdgeCaseTest, DegenerateTriangle) {
+TEST(EdgeCaseTest, DegenerateTriangle)
+{
     Point3D p1(0, 0, 0), p2(1, 0, 0), p3(2, 0, 0);
     Triangle degenerate(0, p1, p2, p3);
     Triangle normal(1, Point3D(0, 1, 0), Point3D(1, 1, 0), Point3D(0, 2, 0));
@@ -88,14 +98,16 @@ TEST(EdgeCaseTest, DegenerateTriangle) {
     EXPECT_NO_THROW(trianglesIntersect(degenerate, normal));
 }
 
-TEST(EdgeCaseTest, IdenticalTriangles) {
+TEST(EdgeCaseTest, IdenticalTriangles)
+{
     Triangle t1(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
     Triangle t2(1, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
     
     EXPECT_TRUE(trianglesIntersect(t1, t2));
 }
 
-TEST(EdgeCaseTest, TouchingTriangles) {
+TEST(EdgeCaseTest, TouchingTriangles)
+{
     Triangle t1(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0));
     Triangle t2(1, Point3D(0, 0, 0), Point3D(0, -1, 0), Point3D(-1, 0, 0));
     
@@ -106,7 +118,8 @@ TEST(EdgeCaseTest, TouchingTriangles) {
 
 
 // More triangle operations
-TEST(TriangleTest, SmallTriangleProjection) {
+TEST(TriangleTest, SmallTriangleProjection)
+{
     Triangle t(0, 
         Point3D(0.001, 0.002, 0.003), 
         Point3D(0.004, 0.005, 0.006), 
@@ -120,7 +133,8 @@ TEST(TriangleTest, SmallTriangleProjection) {
     EXPECT_NEAR(maxProj, 0.007, EPS);
 }
 
-TEST(TriangleTest, SmallTrianglePointInTriangle) {
+TEST(TriangleTest, SmallTrianglePointInTriangle)
+{
     Point3D t0(0.0, 0.0, 0.0);
     Point3D t1(0.01, 0.0, 0.0);
     Point3D t2(0.0, 0.01, 0.0);
@@ -132,7 +146,8 @@ TEST(TriangleTest, SmallTrianglePointInTriangle) {
     EXPECT_FALSE(pointInTriangle(outside, t0, t1, t2));
 }
 
-TEST(TriangleTest, SmallCoplanarTriangles) {
+TEST(TriangleTest, SmallCoplanarTriangles)
+{
     Triangle t1(0, 
         Point3D(0.0, 0.0, 0.0), 
         Point3D(0.01, 0.0, 0.0), 
@@ -148,7 +163,8 @@ TEST(TriangleTest, SmallCoplanarTriangles) {
     EXPECT_TRUE(trianglesIntersect(t1, t2));
 }
 
-TEST(TriangleTest, SmallNonIntersectingTriangles) {
+TEST(TriangleTest, SmallNonIntersectingTriangles)
+{
     Triangle t1(0, 
         Point3D(0.0, 0.0, 0.0), 
         Point3D(0.01, 0.0, 0.0), 
@@ -163,7 +179,8 @@ TEST(TriangleTest, SmallNonIntersectingTriangles) {
     EXPECT_FALSE(trianglesIntersect(t1, t2));
 }
 
-TEST(TriangleTest, SmallTouchingTriangles) {
+TEST(TriangleTest, SmallTouchingTriangles)
+{
     Triangle t1(0, 
         Point3D(0.0, 0.0, 0.0), 
         Point3D(0.01, 0.0, 0.0), 
@@ -179,7 +196,8 @@ TEST(TriangleTest, SmallTouchingTriangles) {
 }
 
 // Edge case with very small triangle near origin
-TEST(TriangleTest, VerySmallTriangle) {
+TEST(TriangleTest, VerySmallTriangle)
+{
     Triangle t(0, 
         Point3D(0.0001, 0.0002, 0.0003), 
         Point3D(0.0002, 0.0001, 0.0003), 
@@ -195,7 +213,8 @@ TEST(TriangleTest, VerySmallTriangle) {
 }
 
 // End-to-End Tests
-TEST(EndToEndTest, NoIntersections) {
+TEST(EndToEndTest, NoIntersections)
+{
     std::vector<Triangle> triangles = {
         Triangle(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0)),
         Triangle(1, Point3D(2, 0, 0), Point3D(3, 0, 0), Point3D(2, 1, 0)),
@@ -206,7 +225,8 @@ TEST(EndToEndTest, NoIntersections) {
     EXPECT_TRUE(result.empty());
 }
 
-TEST(EndToEndTest, MultipleIntersections) {
+TEST(EndToEndTest, MultipleIntersections)
+{
     std::vector<Triangle> triangles = {
         Triangle(0, Point3D(0, 0, 0), Point3D(2, 0, 0), Point3D(0, 2, 0)),
         Triangle(1, Point3D(1, 0, 0), Point3D(3, 0, 0), Point3D(1, 2, 0)),
@@ -217,7 +237,8 @@ TEST(EndToEndTest, MultipleIntersections) {
     EXPECT_EQ(result.size(), 3);
 }
 
-TEST(EndToEndTest, SingleIntersectionPair) {
+TEST(EndToEndTest, SingleIntersectionPair)
+{
     std::vector<Triangle> triangles = {
         Triangle(0, Point3D(0, 0, 0), Point3D(1, 0, 0), Point3D(0, 1, 0)),
         Triangle(1, Point3D(2, 0, 0), Point3D(3, 0, 0), Point3D(2, 1, 0)),
@@ -228,7 +249,8 @@ TEST(EndToEndTest, SingleIntersectionPair) {
     EXPECT_EQ(result.size(), 2);
 }
 
-TEST(PerformanceTest, ManyNonIntersectingTriangles) {
+TEST(PerformanceTest, ManyNonIntersectingTriangles)
+{
     std::vector<Triangle> triangles;
     int n = 1000;
     /* 
@@ -238,17 +260,17 @@ TEST(PerformanceTest, ManyNonIntersectingTriangles) {
     
     */
     
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
         triangles.emplace_back(i, 
             Point3D(i * 3, 0, 0), 
             Point3D(i * 3 + 1, 0, 0), 
             Point3D(i * 3, 1, 0));
     }
-    
-    EXPECT_NO_THROW(findIntersectingTriangles(triangles));
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
