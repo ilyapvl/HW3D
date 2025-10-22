@@ -2,20 +2,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 #include "triangle_test.h"
+
+using namespace Geometry3D;
 
 int main(int argc, char** argv)
 {
-    if (argc > 1)
-    {
-        if (std::strcmp(argv[1], "--t") == 0)
-        {
-            runAllTests();
-
-            return 0;
-        }
-    }
-
     int N = 0;
     std::cin >> N;
     

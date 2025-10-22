@@ -3,6 +3,8 @@
 
 #include <vector>
 
+namespace Geometry3D {
+
 const double EPS = 1e-12;
 
 struct Point3D
@@ -35,10 +37,8 @@ bool coplanarTrianglesIntersect(const Triangle& t1, const Triangle& t2);
 bool trianglesIntersect(const Triangle& t1, const Triangle& t2);
 std::vector<int> findIntersectingTriangles(const std::vector<Triangle>& triangles);
 
-
 bool areCoplanar(const Triangle& t1, const Triangle& t2);
 
+} // namespace Geometry3D
+
 #endif
-
-
-

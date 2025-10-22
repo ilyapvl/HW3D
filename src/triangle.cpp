@@ -4,7 +4,7 @@
 #include <set>
 #include <iostream>
 
-
+namespace Geometry3D {
 
 Point3D::Point3D() : x(0), y(0), z(0){}
 
@@ -31,8 +31,6 @@ Point3D Point3D::operator*(double scalar) const
 {
     return Point3D(x * scalar, y * scalar, z * scalar);
 }
-
-
 
 Triangle::Triangle(int id, const Point3D& v0, const Point3D& v1, const Point3D& v2) : id(id)
 {
@@ -256,3 +254,5 @@ std::vector<int> findIntersectingTriangles(const std::vector<Triangle>& triangle
     
     return std::vector<int>(result.begin(), result.end());
 }
+
+} // namespace Geometry3D
