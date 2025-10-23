@@ -25,7 +25,7 @@ make
 
 Для запуска тестов:
 ```
-./triangle_test
+./triangle_tests
 ```
 
 ## Формат входных данных
